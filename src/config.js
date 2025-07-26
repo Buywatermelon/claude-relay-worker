@@ -93,3 +93,4 @@ export const UI_TEXT = {
   AUTH_CODE_PLACEHOLDER: '从地址栏复制的完整 code 参数值（可包含 # 符号）',
   AUTH_CODE_HINT: '💡 提示：可以粘贴完整的 URL 片段，系统会自动提取授权码'
 };
+

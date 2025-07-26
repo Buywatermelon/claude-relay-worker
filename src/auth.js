@@ -3,7 +3,7 @@
  */
 
 import { OAUTH_CONFIG, ERROR_CODES, SUCCESS_MESSAGES } from './config.js';
-import { createErrorResponse, createSuccessResponse, cleanAuthCode, createTokenInfo, logError } from './utils.js';
+import { createErrorResponse, createSuccessResponse, cleanAuthCode, createTokenInfo } from './utils.js';
 
 /**
  * 为 OAuth 流程生成 PKCE 参数
@@ -62,7 +62,7 @@ export async function handleGenerateAuthUrl(env) {
       instructions: '请在新窗口中完成授权，然后从地址栏复制 code 参数的值'
     }, SUCCESS_MESSAGES.AUTH_URL_GENERATED);
   } catch (error) {
-    logError('生成授权URL错误', error);
+    console.error('生成授权URL错误:', error);
     return createErrorResponse(ERROR_CODES.AUTH_GENERATE_URL_FAILED, `生成授权URL失败: ${error.message}`, 500);
   }
 }
@@ -118,7 +118,7 @@ export async function handleExchangeToken(request, env) {
     }, SUCCESS_MESSAGES.AUTH_TOKEN_OBTAINED);
     
   } catch (error) {
-    logError('交换令牌错误', error);
+    console.error('交换令牌错误:', error);
     return createErrorResponse(ERROR_CODES.AUTH_TOKEN_EXCHANGE_FAILED, `交换令牌失败: ${error.message}`, 500);
   }
 }
@@ -149,7 +149,7 @@ export async function handleTokenStatus(env) {
       scope: token.scope
     }, SUCCESS_MESSAGES.TOKEN_STATUS_CHECKED);
   } catch (error) {
-    logError('检查令牌状态错误', error);
+    console.error('检查令牌状态错误:', error);
     return createErrorResponse(ERROR_CODES.AUTH_CHECK_STATUS_FAILED, `检查令牌状态失败: ${error.message}`, 500);
   }
 }
@@ -172,7 +172,7 @@ export async function refreshAccessToken(env) {
       throw new Error('未找到 refresh_token');
     }
 
-    console.log('开始刷新令牌...');
+    console.log('开始刷新令牌');
 
     // 调用 refresh token 接口
     const refreshResponse = await fetch(OAUTH_CONFIG.TOKEN_URL, {
@@ -211,7 +211,7 @@ export async function refreshAccessToken(env) {
     };
 
   } catch (error) {
-    logError('刷新令牌错误', error);
+    console.error('刷新令牌错误:', error);
     return {
       success: false,
       error: error.message

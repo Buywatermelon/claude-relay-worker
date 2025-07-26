@@ -130,20 +130,3 @@ export function createTokenInfo(tokenData) {
   };
 }
 
-/**
- * 记录调试信息
- * @param {string} method - HTTP 方法
- * @param {string} pathname - 请求路径
- */
-export function logRequest(method, pathname) {
-  console.log(`请求: ${method} ${pathname}`);
-}
-
-/**
- * 记录错误信息
- * @param {string} context - 错误上下文
- * @param {Error} error - 错误对象
- */
-export function logError(context, error) {
-  console.error(`错误 - ${context}:`, error);
-}

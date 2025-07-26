@@ -8,9 +8,7 @@ import { getTokenPageHTML } from './templates.js';
 import {
   handleCorsOptions,
   createErrorResponse,
-  createHtmlResponse,
-  logRequest,
-  logError
+  createHtmlResponse
 } from './utils.js';
 import {
   handleGenerateAuthUrl,
@@ -25,7 +23,7 @@ export default {
     const url = new URL(request.url);
 
     // 调试日志
-    logRequest(request.method, url.pathname);
+    console.log(`请求: ${request.method} ${url.pathname}`);
 
     // 处理 CORS 预检请求
     if (request.method === 'OPTIONS') {
@@ -55,26 +53,26 @@ export default {
           return createErrorResponse(ERROR_CODES.SYSTEM_NOT_FOUND, null, 404);
       }
     } catch (error) {
-      logError('Worker错误', error);
+      console.error('Worker错误:', error);
       return createErrorResponse(ERROR_CODES.SYSTEM_INTERNAL_ERROR, `服务器内部错误: ${error.message}`, 500);
     }
   },
 
   async scheduled(controller, env, ctx) {
-    console.log('定时任务开始执行 - Claude Token 自动刷新');
+    console.log('定时任务开始: Token 自动刷新');
     
     try {
       const result = await refreshAccessToken(env);
       
       if (result.success) {
-        console.log(`令牌刷新成功 - 新的过期时间: ${new Date(result.expiresAt).toISOString()}`);
+        console.log(`Token 刷新成功，过期时间: ${new Date(result.expiresAt).toISOString()}`);
       } else {
-        console.error(`令牌刷新失败: ${result.error}`);
+        console.error(`Token 刷新失败: ${result.error}`);
       }
     } catch (error) {
       console.error('定时任务执行错误:', error);
     }
     
-    console.log('定时任务执行完成');
+    console.log('定时任务完成');
   }
 };
